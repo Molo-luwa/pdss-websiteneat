@@ -1,12 +1,11 @@
 .home {
   min-height: 100vh;
-  background-color: #121212; /* Deep base color */
+  background-color: #121212;
   color: #e0e0e0;
   font-family: 'Inter', sans-serif;
 }
 
 .hero {
-  /* FIX: Added url() and a dark linear-gradient overlay */
   background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
               url('./pic1.avif') no-repeat center center/cover;
   padding: 10rem 2rem;
@@ -18,7 +17,7 @@
 }
 
 .hero h1 {
-  font-size: clamp(2.5rem, 8vw, 4.5rem); /* Responsive font sizing */
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
   margin-bottom: 1rem;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -30,7 +29,7 @@
   margin-bottom: 2.5rem;
   font-style: italic;
   letter-spacing: 1px;
-  color: #bfa37e; /* Sophisticated gold/bronze accent */
+  color: #bfa37e; 
 }
 
 .cta-button {
@@ -38,7 +37,7 @@
   background-color: #bfa37e;
   color: #1a1a1a;
   padding: 1.2rem 2.5rem;
-  border-radius: 2px; /* Sharper edges feel more "boutique" */
+  border-radius: 2px; 
   text-decoration: none;
   font-weight: 600;
   text-transform: uppercase;
@@ -54,7 +53,7 @@
 
 .features {
   max-width: 1200px;
-  margin: -4rem auto 4rem; /* Overlaps hero slightly for modern look */
+  margin: -4rem auto 4rem; 
   padding: 0 2rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -62,7 +61,7 @@
 }
 
 .feature {
-  background: #1e1e1e; /* "Not too dark" charcoal */
+  background: #1e1e1e; 
   padding: 3rem 2rem;
   border-radius: 4px;
   text-align: center;
