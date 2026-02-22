@@ -1,71 +1,95 @@
 .home {
   min-height: 100vh;
+  background-color: #121212; /* Deep base color */
+  color: #e0e0e0;
+  font-family: 'Inter', sans-serif;
 }
 
 .hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 6rem 2rem;
+  /* FIX: Added url() and a dark linear-gradient overlay */
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+              url('./pic1.avif') no-repeat center center/cover;
+  padding: 10rem 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero h1 {
-  font-size: 3rem;
-  margin: 0 0 0.5rem 0;
+  font-size: clamp(2.5rem, 8vw, 4.5rem); /* Responsive font sizing */
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ffffff;
 }
 
 .slogan {
-  font-size: 1.3rem;
-  margin: 0 0 2rem 0;
-  opacity: 0.9;
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
+  font-style: italic;
+  letter-spacing: 1px;
+  color: #bfa37e; /* Sophisticated gold/bronze accent */
 }
 
 .cta-button {
   display: inline-block;
-  background-color: white;
-  color: #667eea;
-  padding: 1rem 2rem;
-  border-radius: 4px;
+  background-color: #bfa37e;
+  color: #1a1a1a;
+  padding: 1.2rem 2.5rem;
+  border-radius: 2px; /* Sharper edges feel more "boutique" */
   text-decoration: none;
-  font-weight: bold;
-  transition: transform 0.3s, box-shadow 0.3s;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  border: 1px solid #bfa37e;
 }
 
 .cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background-color: transparent;
+  color: #bfa37e;
+  transform: translateY(-3px);
 }
 
 .features {
   max-width: 1200px;
-  margin: 4rem auto;
+  margin: -4rem auto 4rem; /* Overlaps hero slightly for modern look */
   padding: 0 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 }
 
 .feature {
-  background: #f5f5f5;
-  padding: 2rem;
-  border-radius: 8px;
+  background: #1e1e1e; /* "Not too dark" charcoal */
+  padding: 3rem 2rem;
+  border-radius: 4px;
   text-align: center;
+  border: 1px solid #333;
+  transition: border-color 0.3s ease;
+}
+
+.feature:hover {
+  border-color: #bfa37e;
 }
 
 .feature h3 {
-  color: #667eea;
-  margin-top: 0;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.feature p {
+  color: #a0a0a0;
+  line-height: 1.6;
 }
 
 @media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2rem;
+  .hero {
+    padding: 6rem 1rem;
   }
-
-  .slogan {
-    font-size: 1rem;
-  }
-
+  
   .features {
     margin: 2rem auto;
   }
