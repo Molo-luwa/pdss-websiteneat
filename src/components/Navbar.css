@@ -1,87 +1,23 @@
+/* --- 1. Base Variables & Reset --- */
+:root {
+  --primary-gold: #bfa37e;
+  --nav-bg: rgba(18, 18, 18, 0.9);
+  --border-white: rgba(255, 255, 255, 0.05);
+  --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* --- 2. Main Navbar Structure --- */
 .navbar {
-  background-color: #1a1a1a;
-  padding: 1rem 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  border-bottom: 1px solid #333;
-}
-
-.navbar-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.navbar-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: white;
-  text-decoration: none;
-  margin-right: 2rem;
-}
-
-.nav-links {
-  display: flex;
-  list-style: none;
-  gap: 2rem;
-  margin: 0;
-  padding: 0;
-  flex: 1;
-}
-
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.nav-links a:hover {
-  color: #ff6b6b;
-}
-
-.selection-button {
-  background-color: #ff6b6b;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-
-.selection-button:hover {
-  background-color: #ff5252;
-}
-
-@media (max-width: 768px) {
-  .navbar-container {
-    flex-wrap: wrap;
-  }
-
-  .nav-links {
-    gap: 1rem;
-    flex-basis: 100%;
-    margin-top: 1rem;
-  }
-
-  .selection-button {
-    flex-basis: 100%;
-    text-align: center;
-    margin-top: 0.5rem;
-  }
-}
-.navbar {
-  background-color: rgba(18, 18, 18, 0.8); /* Translucent dark */
+  background-color: var(--nav-bg);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   padding: 1.2rem 2rem;
-  position: fixed; /* Better for immersive sites than sticky */
+  position: fixed;
   width: 100%;
   top: 0;
-  z-index: 1000;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  left: 0;
+  z-index: 2000; /* Stays above everything */
+  border-bottom: 1px solid var(--border-white);
 }
 
 .navbar-container {
@@ -92,20 +28,21 @@
   justify-content: space-between;
 }
 
-/* Brand Logo */
+/* --- 3. Brand Logo --- */
 .navbar-brand {
   font-size: 1.8rem;
   font-weight: 800;
   color: white;
   text-decoration: none;
   letter-spacing: -1px;
+  z-index: 2001; /* Stays above drawer */
 }
 
 .navbar-brand span {
-  color: #bfa37e; /* The signature gold */
+  color: var(--primary-gold);
 }
 
-/* Navigation Links */
+/* --- 4. Desktop Navigation Links --- */
 .nav-links {
   display: flex;
   list-style: none;
@@ -121,11 +58,10 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 2px;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   position: relative;
 }
 
-/* Hover underline effect */
 .nav-links a::after {
   content: '';
   position: absolute;
@@ -133,7 +69,7 @@
   left: 0;
   width: 0;
   height: 1px;
-  background-color: #bfa37e;
+  background-color: var(--primary-gold);
   transition: width 0.3s ease;
 }
 
@@ -150,20 +86,27 @@
   font-size: 0.7rem !important;
 }
 
-/* Selection Pill Button */
+/* --- 5. Action Buttons (Pill & Hamburger) --- */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 2001; /* Keep buttons above the drawer */
+}
+
 .selection-pill {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background-color: #bfa37e;
+  gap: 10px;
+  background-color: var(--primary-gold);
   color: #000;
   padding: 0.6rem 1.2rem;
-  border-radius: 50px; /* Pill shape */
+  border-radius: 50px;
   text-decoration: none;
   font-weight: 700;
   font-size: 0.8rem;
   text-transform: uppercase;
-  transition: transform 0.3s, background-color 0.3s;
+  transition: var(--transition);
 }
 
 .selection-pill:hover {
@@ -184,29 +127,65 @@
 }
 
 .mobile-menu-btn {
-  display: none;
+  display: none; /* Hidden on desktop */
   background: none;
   border: none;
   color: white;
   cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s;
 }
 
-/* Responsive */
+/* --- 6. Mobile Optimization (max-width: 900px) --- */
 @media (max-width: 900px) {
-  .nav-main {
-    display: none; /* Hide links on mobile, usually handled by a drawer */
+  .navbar {
+    padding: 1rem 1.5rem;
   }
 
   .mobile-menu-btn {
     display: block;
-    margin-left: 1.5rem;
+    z-index: 2002; /* Ensures X is always clickable */
   }
 
+  /* Hide pill text to prevent clashing with Hamburger */
   .pill-text {
-    display: none; /* Only show icon/count on mobile */
+    display: none;
   }
 
   .selection-pill {
     padding: 0.6rem;
+    gap: 5px;
+  }
+
+  /* The Drawer Wrapper */
+  .nav-wrapper {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Hidden by default */
+    width: 85%;
+    height: 100vh;
+    background: #0d0d0d;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem;
+    transition: right 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 1900;
+    border-left: 1px solid var(--border-white);
+  }
+
+  .nav-wrapper.open {
+    right: 0; /* Slide in */
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 2.5rem;
+    align-items: flex-start;
+  }
+
+  .nav-links a {
+    font-size: 1.8rem;
+    letter-spacing: 4px;
   }
 }
