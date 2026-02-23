@@ -1,90 +1,75 @@
-
-/* Design Card */
 .design-card {
-  cursor: pointer;
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  background: #161616;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
 }
 
-.card-media {
+.design-card:hover {
+  transform: translateY(-10px);
+  border-color: #bfa37e;
+}
+
+.image-container {
   position: relative;
-  aspect-ratio: 4/5;
+  height: 400px;
   overflow: hidden;
-  background: #111;
-  border-radius: 2px;
 }
 
 .design-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 1.2s ease;
+  transition: transform 0.6s ease;
 }
 
 .design-card:hover .design-image {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
-.card-overlay {
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
-  opacity: 0;
-  transition: 0.3s;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+.design-info {
   padding: 1.5rem;
-}
-
-.design-card:hover .card-overlay { opacity: 1; }
-
-.quick-add {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  border: none;
-  background: #fff;
-  color: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-.quick-add.is-selected {
-  background: #bfa37e;
-  color: #fff;
-}
-
-.card-info {
-  margin-top: 1.5rem;
   text-align: center;
 }
 
-.card-info h3 {
+.design-info h3 {
   font-size: 1.1rem;
-  letter-spacing: 1px;
   margin-bottom: 0.4rem;
-}
-
-.card-info p {
-  color: #666;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* Modal Enhancements */
-.modal-content {
-  background: #111 !important;
   color: #fff;
-  border: 1px solid #bfa37e;
+  font-weight: 500;
 }
 
-.modal-button {
-  background: #bfa37e !important;
-  border-radius: 0 !important;
+.design-meta {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #666;
   letter-spacing: 2px;
+  margin-bottom: 1.2rem;
+}
+
+.add-button {
+  width: 100%;
+  padding: 0.8rem;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.add-button:hover {
+  background: #bfa37e;
+  color: #000;
+  border-color: #bfa37e;
+}
+
+.add-button.selected {
+  background: #bfa37e;
+  color: #000;
+  border-color: #bfa37e;
 }
