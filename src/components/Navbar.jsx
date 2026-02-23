@@ -23,7 +23,6 @@ export default function Navbar() {
             <li><Link to="/" onClick={closeMenu}>Home</Link></li>
             <li><Link to="/gallery" onClick={closeMenu}>Gallery</Link></li>
             <li><Link to="/contact" onClick={closeMenu}>Contact</Link></li>
-            {/* <li><Link to="/admin" className="admin-link" onClick={closeMenu}>Admin</Link></li> */}
           </ul>
         </div>
 

@@ -148,12 +148,15 @@ export default function Admin() {
   }
 
   return (
-    <div className="admin-dashboard">
-      <header className="admin-header">
-        <h1>PDSS<span>.</span> Control</h1>
-        <button className="logout-button" onClick={() => supabase.auth.signOut()}>
-          <LogOut size={16} /> Logout
-        </button>
+  <div className="admin-dashboard">
+    {/* This button will stay fixed in the bottom right corner */}
+    <button className="logout-floating" onClick={() => supabase.auth.signOut()}>
+      <LogOut size={18} />
+      <span>Logout</span>
+    </button>
+
+    <header className="admin-header">
+      <h1>PDSS<span>.</span> Control</h1>
       </header>
 
       <div className="admin-grid">
