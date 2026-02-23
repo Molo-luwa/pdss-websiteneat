@@ -18,7 +18,6 @@ export default function Navbar() {
           PDSS<span>.</span>
         </Link>
 
-        {/* Desktop and Mobile Drawer Links */}
         <div className={`nav-wrapper ${isMenuOpen ? 'open' : ''}`}>
           <ul className="nav-links">
             <li><Link to="/" onClick={closeMenu}>Home</Link></li>
