@@ -10,7 +10,6 @@
   overflow-x: hidden;
 }
 
-/* Fullscreen Hero */
 .hero-fullscreen {
   position: relative;
   height: 100vh;
@@ -70,7 +69,6 @@
   font-weight: 300;
 }
 
-/* Gold Button */
 .gold-btn {
   display: inline-flex;
   align-items: center;
@@ -92,7 +90,6 @@
   box-shadow: 0 10px 20px rgba(0,0,0,0.4);
 }
 
-/* Scroll Indicator */
 .scroll-indicator {
   position: absolute;
   bottom: 30px;
@@ -112,7 +109,6 @@
   letter-spacing: 2px;
 }
 
-/* Value Section */
 .value-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -152,7 +148,6 @@
   line-height: 1.6;
 }
 
-/* Animations */
 @keyframes fadeInDown {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
