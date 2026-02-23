@@ -63,6 +63,7 @@
   letter-spacing: -3px;
   line-height: 1;
   background: linear-gradient(to bottom, #fff 40%, var(--primary-gold));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
