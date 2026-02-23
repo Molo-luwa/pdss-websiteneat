@@ -1,6 +1,5 @@
 import supabase from './supabase'
 
-// 1. Fetch all designs for the gallery
 export const getDesigns = async () => {
   const { data, error } = await supabase
     .from('designs')
@@ -11,11 +10,9 @@ export const getDesigns = async () => {
   return data
 }
 
-// 2. Add a new design (with image upload)
 export const addDesign = async (designData) => {
   let finalImageUrl = designData.imageUrl
 
-  // If a file was dragged in, upload it to the storage bucket
   if (designData.imageFile) {
     const file = designData.imageFile
     const fileExt = file.name.split('.').pop()
@@ -52,7 +49,6 @@ export const addDesign = async (designData) => {
   return data[0].id
 }
 
-// 3. Update an existing design
 export const updateDesign = async (id, updateData) => {
   const { data, error } = await supabase
     .from('designs')
@@ -69,7 +65,6 @@ export const updateDesign = async (id, updateData) => {
   return data
 }
 
-// 4. Delete a design
 export const deleteDesign = async (id) => {
   const { error } = await supabase
     .from('designs')
