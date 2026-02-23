@@ -13,12 +13,13 @@
 
 .contact-wrapper {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   background-color: var(--deep-bg);
   color: var(--text-main);
-  overflow: hidden;
   position: relative;
+  padding-top: 40px;
   font-family: 'Inter', -apple-system, sans-serif;
+  overflow: hidden;
 }
 
 .bg-glow {
@@ -35,7 +36,7 @@
 .contact-sidebar {
   width: 380px;
   background: var(--sidebar-bg);
-  padding: 5rem 3rem;
+  padding: 3rem 2.5rem;
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;

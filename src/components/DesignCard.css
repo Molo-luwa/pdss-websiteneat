@@ -1,75 +1,116 @@
 .design-card {
-  background: #161616;
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 2px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #141414 100%);
+  border: 1.5px solid rgba(191, 163, 126, 0.2);
+  border-radius: 12px;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.design-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(191, 163, 126, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .design-card:hover {
-  transform: translateY(-10px);
-  border-color: #bfa37e;
+  transform: translateY(-12px);
+  border-color: rgba(191, 163, 126, 0.6);
+  box-shadow: 0 20px 48px rgba(191, 163, 126, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.design-card:hover::before {
+  opacity: 1;
 }
 
 .image-container {
   position: relative;
-  height: 400px;
   overflow: hidden;
+  aspect-ratio: 1 / 1.2;
+  background: linear-gradient(135deg, rgba(191, 163, 126, 0.05), transparent);
 }
 
 .design-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .design-card:hover .design-image {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .design-info {
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   text-align: center;
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.8), rgba(20, 20, 20, 0.95));
+  backdrop-filter: blur(10px);
 }
 
 .design-info h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.4rem;
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
   color: #fff;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .design-meta {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  color: #666;
+  color: #bfa37e;
   letter-spacing: 2px;
   margin-bottom: 1.2rem;
+  font-weight: 500;
 }
 
 .add-button {
   width: 100%;
-  padding: 0.8rem;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #fff;
+  padding: 0.9rem;
+  background: linear-gradient(135deg, rgba(191, 163, 126, 0.15), rgba(191, 163, 126, 0.05));
+  border: 1.5px solid rgba(191, 163, 126, 0.4);
+  border-radius: 6px;
+  color: #bfa37e;
   text-transform: uppercase;
   font-size: 0.7rem;
-  letter-spacing: 2px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.add-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(191, 163, 126, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
 }
 
 .add-button:hover {
-  background: #bfa37e;
-  color: #000;
-  border-color: #bfa37e;
+  background: linear-gradient(135deg, rgba(191, 163, 126, 0.3), rgba(191, 163, 126, 0.15));
+  border-color: rgba(191, 163, 126, 0.8);
+  box-shadow: 0 0 20px rgba(191, 163, 126, 0.25), inset 0 0 10px rgba(191, 163, 126, 0.1);
+  transform: translateY(-2px);
+}
+
+.add-button:hover::before {
+  transform: translateX(100%);
 }
 
 .add-button.selected {
-  background: #bfa37e;
-  color: #000;
+  background: linear-gradient(135deg, #bfa37e, #a8865f);
   border-color: #bfa37e;
+  color: #000;
+  box-shadow: 0 0 20px rgba(191, 163, 126, 0.4);
 }

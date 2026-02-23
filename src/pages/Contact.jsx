@@ -21,14 +21,19 @@ export default function Contact() {
   const [showSuccess, setShowSuccess] = useState(false);
   
   const WHATSAPP_NUMBER = "2348119224876";
+  const CONTACT_EMAIL = "psalmsynscott23@gmail.com";
+
+  const getInquiryMessage = () => {
+    return selectedDesigns.length > 0 
+      ? `I am inquiring about the following pieces: ${selectedDesigns.map(d => d.name).join(', ')}` 
+      : '';
+  };
 
   const handleWhatsAppClick = () => {
     if (selectedDesigns.length === 0) return;
     
     let message = `*PDSS Boutique Inquiry*\n---\n`;
-    selectedDesigns.forEach((d, i) => {
-      message += `▫️ *${d.name}*\n   Category: ${d.category}\n`;
-    });
+    message += getInquiryMessage();
     
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
     setShowSuccess(true);
@@ -36,6 +41,14 @@ export default function Contact() {
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
+    const formData = new FormData(e.target);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const message = formData.get('message');
+    
+    const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=PDSS Boutique Inquiry from ${name}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+    window.location.href = mailtoLink;
+    
     setShowSuccess(true);
     setView('list');
   };
@@ -79,7 +92,7 @@ export default function Contact() {
             <div className="icon-box"><Instagram size={18} /></div>
             <span>Instagram Direct</span>
           </a>
-          <a href="https://tiktok.com" target="_blank" rel="noreferrer" className="s-link-premium">
+          <a href="https://www.tiktok.com/@pdsswear?_r=1&_t=ZS-94A8cIjdn1w" target="_blank" rel="noreferrer" className="s-link-premium">
             <div className="icon-box"><Music2 size={18} /></div>
             <span>TikTok Studio</span>
           </a>
@@ -166,22 +179,21 @@ export default function Contact() {
                 <div className="form-row">
                   <div className="input-group">
                     <label>Full Name</label>
-                    <input type="text" placeholder="Enter your name" required />
+                    <input type="text" name="name" placeholder="Enter your name" required />
                   </div>
                   <div className="input-group">
                     <label>Email Address</label>
-                    <input type="email" placeholder="email@address.com" required />
+                    <input type="email" name="email" placeholder="email@address.com" required />
                   </div>
                 </div>
                 
                 <div className="input-group">
                   <label>Message / Custom Measurements</label>
                   <textarea 
+                    name="message"
                     rows="5" 
                     placeholder="Provide details about your preferred fit or event date..."
-                    defaultValue={selectedDesigns.length > 0 
-                      ? `I am inquiring about the following pieces: ${selectedDesigns.map(d => d.name).join(', ')}` 
-                      : ''}
+                    defaultValue={getInquiryMessage()}
                   ></textarea>
                 </div>
 

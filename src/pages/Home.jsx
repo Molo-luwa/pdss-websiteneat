@@ -5,12 +5,13 @@ import './Home.css'
 export default function Home() {
   return (
     <div className="home-container">
+      {/* Hero Section */}
       <section className="hero-fullscreen">
         <div className="hero-overlay"></div>
-        <img src="./pic2.jpg" alt="Fashion Statement" className="hero-img" />
+        <img src="./pic3.jpg" alt="Fashion Statement" className="hero-img" />
         
         <div className="hero-content">
-          <span className="hero-subtitle">The 2026 Collection</span>
+          <span className="hero-subtitle">The New Era</span>
           <h1 className="hero-title">PDSS <br/> BOUTIQUE</h1>
           <p className="hero-tagline">Tradition redefined for the modern silhouette.</p>
           
@@ -27,6 +28,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Modern Value Section */}
       <section className="value-section">
         <div className="value-card">
           <div className="card-line"></div>

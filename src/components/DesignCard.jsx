@@ -1,49 +1,21 @@
-import { useState, useEffect } from 'react'
-import { getDesigns } from '../utils/supabaseUtils'
-import DesignCard from './DesignCard'
+import './DesignCard.css'
 
-export default function Gallery({ onDesignSelect }) {
-  const [designs, setDesigns] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function loadGallery() {
-      try {
-        const data = await getDesigns()
-        setDesigns(data || [])
-      } catch (err) {
-        console.error("Failed to load gallery:", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadGallery()
-  }, [])
-
-  if (loading) return (
-    <div className="loader-container">
-      <div className="minimal-loader"></div>
-      <p>Consulting Archives...</p>
-    </div>
-  )
+export default function DesignCard({ design, onCardClick }) {
+  if (!design) return null
 
   return (
-    <section className="gallery-section">
-      <div className="design-grid">
-        {designs.map((item) => (
-          <DesignCard 
-            key={item.id} 
-            design={item} 
-            onCardClick={onDesignSelect} 
-          />
-        ))}
+    <div className="design-card" onClick={() => onCardClick && onCardClick(design)}>
+
+      <div className="image-container">
+        <img src={design.imageUrl} alt={design.name} className="design-image" />
+      </div>
+
+      <div className="design-info">
+        <h3>{design.name}</h3>
+        <div className="design-meta">{design.category} · {design.gender}</div>
+        <button className="add-button">View</button>
       </div>
       
-      {designs.length === 0 && (
-        <div className="empty-gallery">
-          <p>The collection is currently being curated. Please check back shortly.</p>
-        </div>
-      )}
-    </section>
+    </div>
   )
-}
+} 
