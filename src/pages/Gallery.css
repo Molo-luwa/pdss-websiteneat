@@ -1,5 +1,5 @@
 .gallery-container {
-  padding: 8rem 2rem 4rem; /* Top padding for the fixed navbar */
+  padding: 8rem 2rem 4rem;
   min-height: 100vh;
   background-color: #0d0d0d;
 }
@@ -59,7 +59,6 @@
   margin: 0 auto;
 }
 
-/* Loading Spinner */
 .loading-state {
   text-align: center;
   padding: 5rem;
