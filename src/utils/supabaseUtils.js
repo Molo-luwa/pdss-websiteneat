@@ -1,113 +1,80 @@
 import supabase from './supabase'
 
-
-export const uploadImage = async (file, bucket = 'designs') => {
-  if (!file) throw new Error('No file provided')
-
-  const fileExt = file.name?.split('.')?.pop() || 'jpg'
-  const uniqueName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${fileExt}`
-  const filePath = uniqueName
-
-  const { data: uploadData, error: uploadError } = await supabase.storage
-    .from(bucket)
-    .upload(filePath, file, { cacheControl: '3600', upsert: false })
-
-  if (uploadError) throw uploadError
-
-  const { data: publicData, error: publicError } = await supabase.storage
-    .from(bucket)
-    .getPublicUrl(filePath)
-
-  if (publicError) throw publicError
-
-  return { publicUrl: publicData.publicUrl, path: filePath }
+// 1. Fetch all designs for the gallery
+export const getDesigns = async () => {
+  const { data, error } = await supabase
+    .from('designs')
+    .select('*')
+    .order('created_at', { ascending: false })
+  
+  if (error) throw error
+  return data
 }
 
-
+// 2. Add a new design (with image upload)
 export const addDesign = async (designData) => {
-  const payload = { ...designData }
+  let finalImageUrl = designData.imageUrl
 
-  if (payload.imageFile) {
-    const { publicUrl, path } = await uploadImage(payload.imageFile)
-    payload.imageUrl = publicUrl
-    
-    payload.imagePath = path
-    delete payload.imageFile
+  // If a file was dragged in, upload it to the storage bucket
+  if (designData.imageFile) {
+    const file = designData.imageFile
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${Math.random()}.${fileExt}`
+    const filePath = `${fileName}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('design-images')
+      .upload(filePath, file)
+
+    if (uploadError) throw uploadError
+
+    const { data: urlData } = supabase.storage
+      .from('design-images')
+      .getPublicUrl(filePath)
+
+    finalImageUrl = urlData.publicUrl
   }
 
   const { data, error } = await supabase
     .from('designs')
-    .insert([payload])
+    .insert([
+      {
+        name: designData.name,
+        category: designData.category,
+        gender: designData.gender,
+        imageUrl: finalImageUrl,
+        altText: designData.altText
+      },
+    ])
     .select()
 
   if (error) throw error
   return data[0].id
 }
 
-
-export const updateDesign = async (designId, updateData) => {
-  const { error } = await supabase
+// 3. Update an existing design
+export const updateDesign = async (id, updateData) => {
+  const { data, error } = await supabase
     .from('designs')
-    .update(updateData)
-    .eq('id', designId)
+    .update({
+      name: updateData.name,
+      category: updateData.category,
+      gender: updateData.gender,
+      imageUrl: updateData.imageUrl,
+      altText: updateData.altText
+    })
+    .eq('id', id)
 
   if (error) throw error
+  return data
 }
 
-
-export const deleteDesign = async (designId) => {
+// 4. Delete a design
+export const deleteDesign = async (id) => {
   const { error } = await supabase
     .from('designs')
     .delete()
-    .eq('id', designId)
+    .eq('id', id)
 
   if (error) throw error
-}
-
-
-export const getDesigns = async () => {
-  const { data, error } = await supabase
-    .from('designs')
-    .select('*')
-    .order('id', { ascending: false })
-
-  if (error) throw error
-  return data || []
-}
-
-
-export const getDesignsByCategory = async (category) => {
-  const { data, error } = await supabase
-    .from('designs')
-    .select('*')
-    .eq('category', category)
-    .order('id', { ascending: false })
-
-  if (error) throw error
-  return data || []
-}
-
-
-export const getDesignsByGender = async (gender) => {
-  const { data, error } = await supabase
-    .from('designs')
-    .select('*')
-    .eq('gender', gender)
-    .order('id', { ascending: false })
-
-  if (error) throw error
-  return data || []
-}
-
-
-export const getDesignsByFilter = async (category, gender) => {
-  const { data, error } = await supabase
-    .from('designs')
-    .select('*')
-    .eq('category', category)
-    .eq('gender', gender)
-    .order('id', { ascending: false })
-
-  if (error) throw error
-  return data || []
 }

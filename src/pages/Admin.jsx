@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import supabase from '../utils/supabase'
 import { addDesign, deleteDesign, updateDesign, getDesigns } from '../utils/supabaseUtils'
-import { LogOut, Plus, Edit2, Trash2, Image as ImageIcon, Check, X } from 'lucide-react'
+import { LogOut, Plus, Edit2, Trash2, Image as ImageIcon, X, Upload, Loader2 } from 'lucide-react'
 import './Admin.css'
 
 export default function Admin() {
@@ -9,7 +9,8 @@ export default function Admin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true) // For initial load
+  const [actionLoading, setActionLoading] = useState(false) // For buttons
   const [error, setError] = useState('')
 
   const [designs, setDesigns] = useState([])
@@ -32,8 +33,8 @@ export default function Admin() {
   })
 
   useEffect(() => {
-    loadDesigns()
     checkAuth()
+    loadDesigns()
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session)
     })
@@ -43,6 +44,7 @@ export default function Admin() {
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession()
     setIsLoggedIn(!!session)
+    setLoading(false)
   }
 
   const loadDesigns = async () => {
@@ -51,12 +53,13 @@ export default function Admin() {
       setDesigns(data || [])
     } catch (err) {
       console.error(err)
+      setError("Failed to sync inventory.")
     }
   }
 
   const handleAuth = async (e) => {
     e.preventDefault()
-    setLoading(true)
+    setActionLoading(true)
     setError('')
     try {
       if (isSignUp) {
@@ -70,13 +73,20 @@ export default function Admin() {
     } catch (err) {
       setError(err.message)
     } finally {
-      setLoading(false)
+      setActionLoading(false)
     }
   }
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, imageFile: file });
+    }
+  };
+
   const handleAddDesign = async (e) => {
     e.preventDefault()
-    setLoading(true)
+    setActionLoading(true)
     try {
       await addDesign(formData)
       await loadDesigns()
@@ -85,13 +95,13 @@ export default function Admin() {
     } catch (err) {
       setError(err.message)
     } finally {
-      setLoading(false)
+      setActionLoading(false)
     }
   }
 
   const handleUpdateDesign = async (e) => {
     e.preventDefault()
-    setLoading(true)
+    setActionLoading(true)
     try {
       await updateDesign(editingDesign.id, editFormData)
       await loadDesigns()
@@ -99,7 +109,7 @@ export default function Admin() {
     } catch (err) {
       setError(err.message)
     } finally {
-      setLoading(false)
+      setActionLoading(false)
     }
   }
 
@@ -113,6 +123,8 @@ export default function Admin() {
     }
   }
 
+  if (loading) return <div className="admin-loading">Verifying Session...</div>
+
   if (!isLoggedIn) {
     return (
       <div className="admin-login">
@@ -123,7 +135,9 @@ export default function Admin() {
           <form onSubmit={handleAuth} className="login-form">
             <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            <button type="submit" disabled={loading}>{isSignUp ? 'Create' : 'Enter'}</button>
+            <button type="submit" disabled={actionLoading}>
+              {actionLoading ? 'Connecting...' : (isSignUp ? 'Create Account' : 'Enter')}
+            </button>
           </form>
           <button onClick={() => setIsSignUp(!isSignUp)} className="toggle-button">
             {isSignUp ? 'Back to Login' : 'Request Access'}
@@ -143,10 +157,39 @@ export default function Admin() {
       </header>
 
       <div className="admin-grid">
+        {/* ADD NEW PIECE CARD */}
         <section className="admin-card">
-          <div className="card-header"><Plus size={18} /> <h2>Add New Piece</h2></div>
+          <div className="card-header"><Plus size={18} /> <h2>New Collection Entry</h2></div>
           <form onSubmit={handleAddDesign} className="admin-form">
-            <input type="text" placeholder="Design Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
+            
+            <div className="drop-zone">
+              <input 
+                type="file" 
+                id="file-upload"
+                accept="image/*" 
+                onChange={handleFileChange} 
+                hidden
+              />
+              <label htmlFor="file-upload" className="file-label">
+                {formData.imageFile ? (
+                  <span className="gold-text">File Ready: {formData.imageFile.name}</span>
+                ) : (
+                  <>
+                    <Upload size={24} />
+                    <span>Click to Upload Image</span>
+                  </>
+                )}
+              </label>
+            </div>
+
+            <input 
+              type="text" 
+              placeholder="Design Name" 
+              value={formData.name} 
+              onChange={(e) => setFormData({...formData, name: e.target.value})} 
+              required 
+            />
+            
             <div className="form-row">
               <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
                 <option value="Native">Native</option>
@@ -158,13 +201,22 @@ export default function Admin() {
                 <option value="Unisex">Unisex</option>
               </select>
             </div>
-            <input type="file" onChange={(e) => setFormData({...formData, imageFile: e.target.files[0]})} />
-            <input type="url" placeholder="Or Image URL" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} />
-            <input type="text" placeholder="Alt Description" value={formData.altText} onChange={(e) => setFormData({...formData, altText: e.target.value})} required />
-            <button type="submit" disabled={loading} className="gold-btn">Publish Piece</button>
+
+            <input 
+              type="text" 
+              placeholder="Alt Description" 
+              value={formData.altText} 
+              onChange={(e) => setFormData({...formData, altText: e.target.value})} 
+              required 
+            />
+            
+            <button type="submit" disabled={actionLoading} className="gold-btn">
+              {actionLoading ? <Loader2 className="spinner" /> : 'Publish Piece'}
+            </button>
           </form>
         </section>
 
+        {/* INVENTORY CARD */}
         <section className="admin-card">
           <div className="card-header"><Edit2 size={18} /> <h2>Inventory</h2></div>
           <div className="table-wrapper">
@@ -177,7 +229,7 @@ export default function Admin() {
                 </tr>
               </thead>
               <tbody>
-                {designs.map((design) => (
+                {designs?.map((design) => (
                   <tr key={design.id}>
                     <td><img src={design.imageUrl} className="mini-thumb" alt="" /></td>
                     <td><div className="name-cell">{design.name}<span>{design.category}</span></div></td>
@@ -189,18 +241,10 @@ export default function Admin() {
                 ))}
               </tbody>
             </table>
+            {designs.length === 0 && <p className="empty-msg">No pieces in collection.</p>}
           </div>
         </section>
       </div>
-
-        <button
-          className="logout-floating"
-          onClick={() => supabase.auth.signOut()}
-          aria-label="Logout"
-          title="Logout"
-        >
-          Logout
-        </button>
 
       {editingDesign && (
         <div className="modal-overlay">
@@ -221,7 +265,7 @@ export default function Admin() {
                 </select>
               </div>
               <input type="url" value={editFormData.imageUrl} onChange={(e) => setEditFormData({...editFormData, imageUrl: e.target.value})} />
-              <button type="submit" className="gold-btn">Save Changes</button>
+              <button type="submit" className="gold-btn" disabled={actionLoading}>Save Changes</button>
             </form>
           </div>
         </div>

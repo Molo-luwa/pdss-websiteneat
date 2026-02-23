@@ -93,6 +93,9 @@ export default function Gallery() {
       {selectedDesign && (
         <DesignModal design={selectedDesign} onClose={() => setSelectedDesign(null)} />
       )}
+      {designs.length === 0 && !loading && (
+        <p className="no-designs">New collection coming soon. Stay tuned!</p>
+      )}
     </div>
   )
 }

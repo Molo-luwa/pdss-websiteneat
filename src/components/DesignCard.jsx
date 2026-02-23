@@ -1,30 +1,49 @@
-import { useSelection } from '../contexts/SelectionContext'
-import { Plus, Check } from 'lucide-react'
-import './DesignCard.css'
+import { useState, useEffect } from 'react'
+import { getDesigns } from '../utils/supabaseUtils'
+import DesignCard from './DesignCard'
 
-export default function DesignCard({ design, onCardClick }) {
-  const { isSelected, addDesign, removeDesign } = useSelection()
-  const selected = isSelected(design.id)
+export default function Gallery({ onDesignSelect }) { // Pass selection handler to parent
+  const [designs, setDesigns] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const handleAddClick = (e) => {
-    e.stopPropagation()
-    selected ? removeDesign(design.id) : addDesign(design)
-  }
+  useEffect(() => {
+    async function loadGallery() {
+      try {
+        const data = await getDesigns()
+        setDesigns(data || [])
+      } catch (err) {
+        console.error("Failed to load gallery:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadGallery()
+  }, [])
+
+  if (loading) return (
+    <div className="loader-container">
+      <div className="minimal-loader"></div>
+      <p>Consulting Archives...</p>
+    </div>
+  )
 
   return (
-    <div className="design-card" onClick={() => onCardClick(design)}>
-      <div className="card-media">
-        <img src={design.imageUrl} alt={design.name} className="design-image" />
-        <div className="card-overlay">
-          <button className={`quick-add ${selected ? 'is-selected' : ''}`} onClick={handleAddClick}>
-            {selected ? <Check size={20} /> : <Plus size={20} />}
-          </button>
+    <section className="gallery-section">
+      <div className="design-grid">
+        {designs.map((item) => (
+          <DesignCard 
+            key={item.id} 
+            design={item} 
+            onCardClick={onDesignSelect} 
+          />
+        ))}
+      </div>
+      
+      {designs.length === 0 && (
+        <div className="empty-gallery">
+          <p>The collection is currently being curated. Please check back shortly.</p>
         </div>
-      </div>
-      <div className="card-info">
-        <h3>{design.name}</h3>
-        <p>{design.category} • {design.gender}</p>
-      </div>
-    </div>
+      )}
+    </section>
   )
 }

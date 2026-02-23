@@ -187,6 +187,38 @@
 .del-btn:hover { border-color: #ff6b6b; color: #ff6b6b; }
 .edit-btn:hover { border-color: var(--gold); color: var(--gold); }
 
+.drop-zone {
+  border: 2px dashed var(--border);
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 1rem;
+}
+
+.drop-zone:hover {
+  border-color: var(--gold);
+  background: rgba(191, 163, 126, 0.05);
+}
+
+.file-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: #666;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.gold-text {
+  color: var(--gold);
+  font-weight: bold;
+}
+
 @media (max-width: 900px) {
   .admin-grid { grid-template-columns: 1fr; }
 }
