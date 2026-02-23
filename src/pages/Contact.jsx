@@ -17,7 +17,7 @@ import './Contact.css';
 
 export default function Contact() {
   const { selectedDesigns, clearSelection, removeFromSelection } = useSelection();
-  const [view, setView] = useState('list'); // 'list' or 'email'
+  const [view, setView] = useState('list'); 
   const [showSuccess, setShowSuccess] = useState(false);
   
   const WHATSAPP_NUMBER = "2348119224876";
@@ -36,7 +36,6 @@ export default function Contact() {
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
-    // Logic for EmailJS or backend would go here
     setShowSuccess(true);
     setView('list');
   };
@@ -44,8 +43,7 @@ export default function Contact() {
   return (
     <div className="contact-wrapper">
       <div className="bg-glow"></div>
-      
-      {/* Success Modal */}
+
       {showSuccess && (
         <div className="modal-overlay">
           <div className="success-modal">
@@ -64,7 +62,6 @@ export default function Contact() {
         </div>
       )}
 
-      {/* Left Sidebar */}
       <aside className="contact-sidebar">
         <div className="brand-block">
           <span className="est-text">Haute Couture</span>
@@ -98,7 +95,6 @@ export default function Contact() {
         </div>
       </aside>
 
-      {/* Main Content Area */}
       <main className="contact-main">
         <header className="main-header">
           <div className="header-text">

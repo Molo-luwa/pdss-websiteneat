@@ -9,8 +9,8 @@ export default function Admin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
-  const [loading, setLoading] = useState(true) // For initial load
-  const [actionLoading, setActionLoading] = useState(false) // For buttons
+  const [loading, setLoading] = useState(true) 
+  const [actionLoading, setActionLoading] = useState(false) 
   const [error, setError] = useState('')
 
   const [designs, setDesigns] = useState([])
@@ -157,7 +157,7 @@ export default function Admin() {
       </header>
 
       <div className="admin-grid">
-        {/* ADD NEW PIECE CARD */}
+
         <section className="admin-card">
           <div className="card-header"><Plus size={18} /> <h2>New Collection Entry</h2></div>
           <form onSubmit={handleAddDesign} className="admin-form">
@@ -216,7 +216,6 @@ export default function Admin() {
           </form>
         </section>
 
-        {/* INVENTORY CARD */}
         <section className="admin-card">
           <div className="card-header"><Edit2 size={18} /> <h2>Inventory</h2></div>
           <div className="table-wrapper">
