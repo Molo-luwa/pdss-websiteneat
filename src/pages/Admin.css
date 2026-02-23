@@ -1,94 +1,212 @@
+:root {
+  --gold: #bfa37e;
+  --bg-dark: #0a0a0a;
+  --card-bg: #121212;
+  --border: rgba(255, 255, 255, 0.08);
+}
+
 .admin-login {
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background: #050505;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Subtle background glow */
-.admin-login::before {
-  content: '';
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  background: var(--primary-gold);
-  filter: blur(150px);
-  opacity: 0.1;
+  background: var(--bg-dark);
 }
 
 .login-container {
-  background: #111;
+  background: var(--card-bg);
   padding: 3rem;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
   width: 100%;
-  max-width: 400px;
-  z-index: 10;
+  max-width: 380px;
   text-align: center;
+  border: 1px solid var(--border);
 }
 
 .login-container h1 {
-  font-size: 1.5rem;
-  color: #fff;
-  text-transform: uppercase;
+  font-size: 1.2rem;
   letter-spacing: 4px;
-  margin-bottom: 2rem;
+  text-transform: uppercase;
+  margin: 1rem 0 2rem;
+  color: #fff;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .login-form input {
   padding: 1rem;
   background: #1a1a1a;
   border: 1px solid #333;
-  border-radius: 2px;
-  color: white;
+  color: #fff;
   font-size: 0.9rem;
-  outline: none;
-  transition: border-color 0.3s;
-}
-
-.login-form input:focus {
-  border-color: var(--primary-gold);
 }
 
 .login-form button {
   padding: 1rem;
-  background-color: var(--primary-gold);
+  background: var(--gold);
   color: #000;
-  border: none;
-  border-radius: 2px;
-  font-size: 0.8rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  border: none;
   cursor: pointer;
-  transition: all 0.3s;
 }
 
-.login-form button:hover:not(:disabled) {
-  background-color: #fff;
-  transform: translateY(-2px);
+.admin-dashboard {
+  min-height: 100vh;
+  background: var(--bg-dark);
+  color: #fff;
+  padding: 2rem;
 }
 
-.toggle-auth {
-  margin-top: 2rem;
-  font-size: 0.8rem;
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.admin-header h1 {
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+}
+
+.admin-header span { color: var(--gold); }
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 2rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2rem;
+  color: var(--gold);
+}
+
+.card-header h2 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #fff;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.admin-form input, .admin-form select {
+  padding: 0.8rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+}
+
+.gold-btn {
+  padding: 1rem;
+  background: var(--gold);
+  color: #000;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  text-align: left;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #666;
+  padding-bottom: 1rem;
+}
+
+.admin-table td {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.mini-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.name-cell {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+.name-cell span {
+  font-size: 0.7rem;
   color: #666;
 }
 
-.toggle-button {
+.action-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btns button {
   background: none;
-  border: none;
-  color: var(--primary-gold);
+  border: 1px solid #333;
+  color: #fff;
+  padding: 5px;
   cursor: pointer;
-  font-weight: bold;
-  margin-left: 5px;
+}
+
+.del-btn:hover { border-color: #ff6b6b; color: #ff6b6b; }
+.edit-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+@media (max-width: 900px) {
+  .admin-grid { grid-template-columns: 1fr; }
+}
+
+/* Floating logout button */
+.logout-floating {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  background: var(--gold);
+  color: #000;
+  border: none;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  cursor: pointer;
+  z-index: 1000;
+  font-weight: 700;
+}
+
+.logout-floating:hover {
+  transform: translateY(-2px);
 }

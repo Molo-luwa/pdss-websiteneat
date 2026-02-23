@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import supabase from '../utils/supabase'
 import { addDesign, deleteDesign, updateDesign, getDesigns } from '../utils/supabaseUtils'
+import { LogOut, Plus, Edit2, Trash2, Image as ImageIcon, Check, X } from 'lucide-react'
 import './Admin.css'
 
 export default function Admin() {
@@ -20,6 +21,7 @@ export default function Admin() {
     imageFile: null,
     altText: '',
   })
+  
   const [editingDesign, setEditingDesign] = useState(null)
   const [editFormData, setEditFormData] = useState({
     name: '',
@@ -32,30 +34,23 @@ export default function Admin() {
   useEffect(() => {
     loadDesigns()
     checkAuth()
-
-    
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session)
     })
-
     return () => subscription?.unsubscribe()
   }, [])
 
   const checkAuth = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
+    const { data: { session } } = await supabase.auth.getSession()
     setIsLoggedIn(!!session)
   }
 
   const loadDesigns = async () => {
     try {
-      const designs = await getDesigns()
-      setDesigns(designs)
+      const data = await getDesigns()
+      setDesigns(data || [])
     } catch (err) {
-      console.error('Error loading designs:', err)
+      console.error(err)
     }
   }
 
@@ -63,115 +58,17 @@ export default function Admin() {
     e.preventDefault()
     setLoading(true)
     setError('')
-
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        })
+        const { error } = await supabase.auth.signUp({ email, password })
         if (error) throw error
-        setError(
-          'Sign up successful! Check your email to verify your account.'
-        )
-        setEmail('')
-        setPassword('')
+        setError('Verification email sent.')
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        })
+        const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
-        setIsLoggedIn(true)
-        setEmail('')
-        setPassword('')
       }
     } catch (err) {
       setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut()
-      setIsLoggedIn(false)
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
-  const handleFormChange = (e) => {
-    const { name, value } = e.target
-    setFormData({
-      ...formData,
-      [name]: value,
-    })
-  }
-
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0] || null
-    setFormData({ ...formData, imageFile: file })
-  }
-
-  const handleEditClick = (design) => {
-    setEditingDesign(design)
-    setEditFormData({
-      name: design.name,
-      category: design.category,
-      gender: design.gender,
-      image: null,
-    })
-  }
-
-  const handleEditFormChange = (e) => {
-    const { name, value } = e.target
-    setEditFormData({
-      ...editFormData,
-      [name]: value,
-    })
-  }
-
-  const handleUpdateDesign = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-
-    try {
-      const updateData = {
-        name: editFormData.name,
-        category: editFormData.category,
-        gender: editFormData.gender,
-      }
-
-      
-      if (editFormData.imageUrl) {
-        updateData.imageUrl = editFormData.imageUrl
-      }
-      
-      
-      if (editFormData.altText) {
-        updateData.altText = editFormData.altText
-      }
-
-      await updateDesign(editingDesign.id, updateData, null)
-
-      
-      const updatedDesigns = designs.map((d) =>
-        d.id === editingDesign.id
-          ? {
-              ...d,
-              ...updateData,
-              imageUrl: editFormData.imageUrl || d.imageUrl,
-            }
-          : d
-      )
-      setDesigns(updatedDesigns)
-      setEditingDesign(null)
-      alert('Design updated successfully!')
-    } catch (err) {
-      setError('Error updating design: ' + err.message)
     } finally {
       setLoading(false)
     }
@@ -179,74 +76,40 @@ export default function Admin() {
 
   const handleAddDesign = async (e) => {
     e.preventDefault()
-    if (!formData.imageUrl && !formData.imageFile) {
-      setError('Please provide an image URL or upload a file')
-      return
-    }
-
     setLoading(true)
-    setError('')
-
     try {
-      
-      const designPayload = {
-        name: formData.name,
-        category: formData.category,
-        gender: formData.gender,
-        altText: formData.altText,
-      }
-
-      if (formData.imageFile) {
-        designPayload.imageFile = formData.imageFile
-      } else if (formData.imageUrl) {
-        designPayload.imageUrl = formData.imageUrl
-      }
-
-      const designId = await addDesign(designPayload)
-
-      
-      setDesigns([
-        ...designs,
-        {
-          id: designId,
-          ...formData,
-        },
-      ])
-
-      
-      setFormData({
-        name: '',
-        category: 'Native',
-        gender: 'Unisex',
-        altText: '',
-        imageUrl: '',
-        imageFile: null,
-      })
-
-      alert('Design added successfully!')
+      await addDesign(formData)
+      await loadDesigns()
+      setFormData({ name: '', category: 'Native', gender: 'Unisex', altText: '', imageUrl: '', imageFile: null })
+      alert('Design published.')
     } catch (err) {
-      setError('Error adding design: ' + err.message)
+      setError(err.message)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleDeleteDesign = async (designId) => {
-    if (!window.confirm('Are you sure you want to delete this design?')) {
-      return
-    }
-
+  const handleUpdateDesign = async (e) => {
+    e.preventDefault()
     setLoading(true)
-    setError('')
-
     try {
-      await deleteDesign(designId)
-      setDesigns(designs.filter((d) => d.id !== designId))
-      alert('Design deleted successfully!')
+      await updateDesign(editingDesign.id, editFormData)
+      await loadDesigns()
+      setEditingDesign(null)
     } catch (err) {
-      setError('Error deleting design: ' + err.message)
+      setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleDeleteDesign = async (id) => {
+    if (!window.confirm('Delete this design?')) return
+    try {
+      await deleteDesign(id)
+      setDesigns(designs.filter(d => d.id !== id))
+    } catch (err) {
+      setError(err.message)
     }
   }
 
@@ -254,42 +117,17 @@ export default function Admin() {
     return (
       <div className="admin-login">
         <div className="login-container">
-          <h1>Admin Login</h1>
-
+          <ImageIcon className="gold-text" size={32} />
+          <h1>Atelier Access</h1>
           {error && <p className="error-message">{error}</p>}
-
           <form onSubmit={handleAuth} className="login-form">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button type="submit" disabled={loading}>
-              {loading ? 'Loading...' : isSignUp ? 'Sign Up' : 'Login'}
-            </button>
+            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <button type="submit" disabled={loading}>{isSignUp ? 'Create' : 'Enter'}</button>
           </form>
-
-          <p className="toggle-auth">
-            {isSignUp
-              ? 'Already have an account? '
-              : "Don't have an account? "}
-            <button
-              type="button"
-              className="toggle-button"
-              onClick={() => setIsSignUp(!isSignUp)}
-            >
-              {isSignUp ? 'Login' : 'Sign Up'}
-            </button>
-          </p>
+          <button onClick={() => setIsSignUp(!isSignUp)} className="toggle-button">
+            {isSignUp ? 'Back to Login' : 'Request Access'}
+          </button>
         </div>
       </div>
     )
@@ -297,193 +135,93 @@ export default function Admin() {
 
   return (
     <div className="admin-dashboard">
-      <div className="admin-header">
-        <h1>Admin Dashboard</h1>
-        <button className="logout-button" onClick={handleLogout}>
-          Logout
+      <header className="admin-header">
+        <h1>PDSS<span>.</span> Control</h1>
+        <button className="logout-button" onClick={() => supabase.auth.signOut()}>
+          <LogOut size={16} /> Logout
         </button>
-      </div>
+      </header>
 
-      {error && <p className="error-message">{error}</p>}
-
-      <div className="admin-content">
-        <div className="upload-section">
-          <h2>Upload New Design</h2>
-          <form onSubmit={handleAddDesign} className="upload-form">
-            <input
-              type="text"
-              name="name"
-              placeholder="Design Name"
-              value={formData.name}
-              onChange={handleFormChange}
-              required
-            />
-
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleFormChange}
-            >
-              <option value="Native">Native</option>
-              <option value="English">English</option>
-            </select>
-
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleFormChange}
-            >
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Unisex">Unisex</option>
-            </select>
-
-            <input
-              type="file"
-              name="imageFile"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-            <p className="file-hint">Or paste an image URL below</p>
-
-            <input
-              type="url"
-              name="imageUrl"
-              placeholder="Image URL (e.g., https://...)"
-              value={formData.imageUrl}
-              onChange={handleFormChange}
-            />
-            <p className="file-hint">
-              If you uploaded a file, this field is optional. Use URL if you prefer.
-            </p>
-
-            <input
-              type="text"
-              name="altText"
-              placeholder="Alt text (e.g., 'Native dress with red pattern')"
-              value={formData.altText}
-              onChange={handleFormChange}
-              required
-            />
-            <p className="file-hint">
-              Describe the design for accessibility and SEO
-            </p>
-
-            <button type="submit" disabled={loading}>
-              {loading ? 'Adding...' : 'Add Design'}
-            </button>
-          </form>
-        </div>
-
-        <div className="designs-section">
-          <h2>Manage Designs</h2>
-          {designs.length === 0 ? (
-            <p>No designs yet. Add one using the form above.</p>
-          ) : (
-            <div className="designs-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Gender</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {designs.map((design) => (
-                    <tr key={design.id}>
-                      <td>{design.name}</td>
-                      <td>{design.category}</td>
-                      <td>{design.gender}</td>
-                      <td>
-                        <button
-                          className="edit-button"
-                          onClick={() => handleEditClick(design)}
-                          disabled={loading}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="delete-button"
-                          onClick={() => handleDeleteDesign(design.id)}
-                          disabled={loading}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {editingDesign && (
-        <div className="modal-overlay" onClick={() => setEditingDesign(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="modal-close"
-              onClick={() => setEditingDesign(null)}
-            >
-              ✕
-            </button>
-            <h2>Edit Design</h2>
-
-            {error && <p className="error-message">{error}</p>}
-
-            <form onSubmit={handleUpdateDesign} className="edit-form">
-              <input
-                type="text"
-                name="name"
-                placeholder="Design Name"
-                value={editFormData.name}
-                onChange={handleEditFormChange}
-                required
-              />
-
-              <select
-                name="category"
-                value={editFormData.category}
-                onChange={handleEditFormChange}
-              >
+      <div className="admin-grid">
+        <section className="admin-card">
+          <div className="card-header"><Plus size={18} /> <h2>Add New Piece</h2></div>
+          <form onSubmit={handleAddDesign} className="admin-form">
+            <input type="text" placeholder="Design Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
+            <div className="form-row">
+              <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
                 <option value="Native">Native</option>
                 <option value="English">English</option>
               </select>
-
-              <select
-                name="gender"
-                value={editFormData.gender}
-                onChange={handleEditFormChange}
-              >
+              <select value={formData.gender} onChange={(e) => setFormData({...formData, gender: e.target.value})}>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Unisex">Unisex</option>
               </select>
+            </div>
+            <input type="file" onChange={(e) => setFormData({...formData, imageFile: e.target.files[0]})} />
+            <input type="url" placeholder="Or Image URL" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} />
+            <input type="text" placeholder="Alt Description" value={formData.altText} onChange={(e) => setFormData({...formData, altText: e.target.value})} required />
+            <button type="submit" disabled={loading} className="gold-btn">Publish Piece</button>
+          </form>
+        </section>
 
-              <input
-                type="url"
-                name="imageUrl"
-                placeholder="New image URL (optional)"
-                value={editFormData.imageUrl}
-                onChange={handleEditFormChange}
-              />
-              <p className="file-hint">Leave empty to keep current image</p>
+        <section className="admin-card">
+          <div className="card-header"><Edit2 size={18} /> <h2>Inventory</h2></div>
+          <div className="table-wrapper">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {designs.map((design) => (
+                  <tr key={design.id}>
+                    <td><img src={design.imageUrl} className="mini-thumb" alt="" /></td>
+                    <td><div className="name-cell">{design.name}<span>{design.category}</span></div></td>
+                    <td className="action-btns">
+                      <button onClick={() => {setEditingDesign(design); setEditFormData(design)}} className="edit-btn"><Edit2 size={14}/></button>
+                      <button onClick={() => handleDeleteDesign(design.id)} className="del-btn"><Trash2 size={14}/></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
 
-              <input
-                type="text"
-                name="altText"
-                placeholder="Alt text (optional)"
-                value={editFormData.altText}
-                onChange={handleEditFormChange}
-              />
-              <p className="file-hint">Leave empty to keep current alt text</p>
+        <button
+          className="logout-floating"
+          onClick={() => supabase.auth.signOut()}
+          aria-label="Logout"
+          title="Logout"
+        >
+          Logout
+        </button>
 
-              <button type="submit" disabled={loading}>
-                {loading ? 'Updating...' : 'Update Design'}
-              </button>
+      {editingDesign && (
+        <div className="modal-overlay">
+          <div className="modal-content-premium admin-modal">
+            <button className="modal-close-btn" onClick={() => setEditingDesign(null)}><X size={24}/></button>
+            <h2>Edit {editingDesign.name}</h2>
+            <form onSubmit={handleUpdateDesign} className="admin-form">
+              <input type="text" value={editFormData.name} onChange={(e) => setEditFormData({...editFormData, name: e.target.value})} required />
+              <div className="form-row">
+                <select value={editFormData.category} onChange={(e) => setEditFormData({...editFormData, category: e.target.value})}>
+                  <option value="Native">Native</option>
+                  <option value="English">English</option>
+                </select>
+                <select value={editFormData.gender} onChange={(e) => setEditFormData({...editFormData, gender: e.target.value})}>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Unisex">Unisex</option>
+                </select>
+              </div>
+              <input type="url" value={editFormData.imageUrl} onChange={(e) => setEditFormData({...editFormData, imageUrl: e.target.value})} />
+              <button type="submit" className="gold-btn">Save Changes</button>
             </form>
           </div>
         </div>
