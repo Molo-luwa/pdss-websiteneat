@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { getDesigns } from '../utils/supabaseUtils'
 import DesignCard from './DesignCard'
 
-export default function Gallery({ onDesignSelect }) { // Pass selection handler to parent
+export default function Gallery({ onDesignSelect }) {
   const [designs, setDesigns] = useState([])
   const [loading, setLoading] = useState(true)
 
