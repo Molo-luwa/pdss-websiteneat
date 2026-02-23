@@ -1,4 +1,3 @@
-/* --- 1. Base Variables & Reset --- */
 :root {
   --primary-gold: #bfa37e;
   --nav-bg: rgba(18, 18, 18, 0.9);
@@ -6,7 +5,6 @@
   --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* --- 2. Main Navbar Structure --- */
 .navbar {
   background-color: var(--nav-bg);
   backdrop-filter: blur(15px);
@@ -16,7 +14,7 @@
   width: 100%;
   top: 0;
   left: 0;
-  z-index: 2000; /* Stays above everything */
+  z-index: 2000; 
   border-bottom: 1px solid var(--border-white);
 }
 
@@ -28,21 +26,19 @@
   justify-content: space-between;
 }
 
-/* --- 3. Brand Logo --- */
 .navbar-brand {
   font-size: 1.8rem;
   font-weight: 800;
   color: white;
   text-decoration: none;
   letter-spacing: -1px;
-  z-index: 2001; /* Stays above drawer */
+  z-index: 2001;
 }
 
 .navbar-brand span {
   color: var(--primary-gold);
 }
 
-/* --- 4. Desktop Navigation Links --- */
 .nav-links {
   display: flex;
   list-style: none;
@@ -86,12 +82,11 @@
   font-size: 0.7rem !important;
 }
 
-/* --- 5. Action Buttons (Pill & Hamburger) --- */
 .nav-actions {
   display: flex;
   align-items: center;
   gap: 15px;
-  z-index: 2001; /* Keep buttons above the drawer */
+  z-index: 2001;
 }
 
 .selection-pill {
@@ -127,7 +122,7 @@
 }
 
 .mobile-menu-btn {
-  display: none; /* Hidden on desktop */
+  display: none; 
   background: none;
   border: none;
   color: white;
@@ -136,7 +131,6 @@
   transition: color 0.3s;
 }
 
-/* --- 6. Mobile Optimization (max-width: 900px) --- */
 @media (max-width: 900px) {
   .navbar {
     padding: 1rem 1.5rem;
@@ -144,10 +138,9 @@
 
   .mobile-menu-btn {
     display: block;
-    z-index: 2002; /* Ensures X is always clickable */
+    z-index: 2002; 
   }
 
-  /* Hide pill text to prevent clashing with Hamburger */
   .pill-text {
     display: none;
   }
@@ -157,11 +150,10 @@
     gap: 5px;
   }
 
-  /* The Drawer Wrapper */
   .nav-wrapper {
     position: fixed;
     top: 0;
-    right: -100%; /* Hidden by default */
+    right: -100%; 
     width: 85%;
     height: 100vh;
     background: #0d0d0d;
@@ -175,7 +167,7 @@
   }
 
   .nav-wrapper.open {
-    right: 0; /* Slide in */
+    right: 0;
   }
 
   .nav-links {
