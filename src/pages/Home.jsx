@@ -5,7 +5,6 @@ import './Home.css'
 export default function Home() {
   return (
     <div className="home-container">
-      {/* Hero Section */}
       <section className="hero-fullscreen">
         <div className="hero-overlay"></div>
         <img src="./pic2.jpg" alt="Fashion Statement" className="hero-img" />
@@ -28,7 +27,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Modern Value Section */}
       <section className="value-section">
         <div className="value-card">
           <div className="card-line"></div>
