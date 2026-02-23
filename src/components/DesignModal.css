@@ -129,7 +129,6 @@
   letter-spacing: 1px;
 }
 
-/* Responsive */
 @media (max-width: 900px) {
   .modal-grid { grid-template-columns: 1fr; }
   .modal-image-panel { height: 40vh; }
