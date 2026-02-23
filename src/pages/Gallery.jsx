@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import DesignCard from '../components/DesignCard'
 import DesignModal from '../components/DesignModal'
 import { getDesigns } from '../utils/supabaseUtils'
-import { Filter, SlidersHorizontal } from 'lucide-react' // Add these icons
+import { Filter, SlidersHorizontal } from 'lucide-react' 
 import './Gallery.css'
 
 export default function Gallery() {
