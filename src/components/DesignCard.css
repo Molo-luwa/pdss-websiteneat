@@ -1,59 +1,90 @@
+
+/* Design Card */
 .design-card {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.design-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+.card-media {
+  position: relative;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  background: #111;
+  border-radius: 2px;
 }
 
 .design-image {
   width: 100%;
-  height: 250px;
+  height: 100%;
   object-fit: cover;
+  transition: transform 1.2s ease;
 }
 
-.design-info {
-  padding: 1rem;
+.design-card:hover .design-image {
+  transform: scale(1.08);
 }
 
-.design-info h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1rem;
-  color: #1a1a1a;
+.card-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+  opacity: 0;
+  transition: 0.3s;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 1.5rem;
 }
 
-.design-meta {
-  margin: 0 0 1rem 0;
-  font-size: 0.85rem;
-  color: #666;
-}
+.design-card:hover .card-overlay { opacity: 1; }
 
-.add-button {
-  width: 100%;
-  padding: 0.5rem;
+.quick-add {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
   border: none;
-  border-radius: 4px;
-  background-color: #ff6b6b;
-  color: white;
+  background: #fff;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.3s;
+  transition: 0.3s;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-.add-button:hover:not(.selected) {
-  background-color: #ff5252;
+.quick-add.is-selected {
+  background: #bfa37e;
+  color: #fff;
 }
 
-.add-button.selected {
-  background-color: #28a745;
+.card-info {
+  margin-top: 1.5rem;
+  text-align: center;
 }
 
-.add-button.selected:hover {
-  background-color: #218838;
+.card-info h3 {
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.4rem;
+}
+
+.card-info p {
+  color: #666;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Modal Enhancements */
+.modal-content {
+  background: #111 !important;
+  color: #fff;
+  border: 1px solid #bfa37e;
+}
+
+.modal-button {
+  background: #bfa37e !important;
+  border-radius: 0 !important;
+  letter-spacing: 2px;
 }

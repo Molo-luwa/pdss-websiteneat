@@ -1,4 +1,5 @@
 import { useSelection } from '../contexts/SelectionContext'
+import { Plus, Check } from 'lucide-react'
 import './DesignCard.css'
 
 export default function DesignCard({ design, onCardClick }) {
@@ -7,25 +8,22 @@ export default function DesignCard({ design, onCardClick }) {
 
   const handleAddClick = (e) => {
     e.stopPropagation()
-    if (selected) {
-      removeDesign(design.id)
-    } else {
-      addDesign(design)
-    }
+    selected ? removeDesign(design.id) : addDesign(design)
   }
 
   return (
     <div className="design-card" onClick={() => onCardClick(design)}>
-      <img src={design.imageUrl} alt={design.altText || design.name} className="design-image" />
-      <div className="design-info">
+      <div className="card-media">
+        <img src={design.imageUrl} alt={design.name} className="design-image" />
+        <div className="card-overlay">
+          <button className={`quick-add ${selected ? 'is-selected' : ''}`} onClick={handleAddClick}>
+            {selected ? <Check size={20} /> : <Plus size={20} />}
+          </button>
+        </div>
+      </div>
+      <div className="card-info">
         <h3>{design.name}</h3>
-        <p className="design-meta">{design.category} | {design.gender}</p>
-        <button
-          className={`add-button ${selected ? 'selected' : ''}`}
-          onClick={handleAddClick}
-        >
-          {selected ? '✓ Selected' : 'Add to Selection'}
-        </button>
+        <p>{design.category} • {design.gender}</p>
       </div>
     </div>
   )
