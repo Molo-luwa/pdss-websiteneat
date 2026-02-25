@@ -66,10 +66,41 @@ export const updateDesign = async (id, updateData) => {
 }
 
 export const deleteDesign = async (id) => {
-  const { error } = await supabase
+  const { data: design, error: fetchError } = await supabase
+    .from('designs')
+    .select('imageUrl')
+    .eq('id', id)
+    .single();
+
+  if (fetchError) throw fetchError;
+
+  if (design?.imageUrl) {
+    const url = design.imageUrl;
+    const bucketName = 'design-images';
+
+    const baseUrl = url.split('?')[0];
+    const publicUrlPrefix = `/public/${bucketName}/`;
+    const index = baseUrl.indexOf(publicUrlPrefix);
+
+    if (index !== -1) {
+      const filePath = baseUrl.substring(index + publicUrlPrefix.length);
+
+      const { error: storageError } = await supabase.storage
+        .from(bucketName)
+        .remove([filePath]);
+
+      if (storageError) {
+        console.error('Failed to delete image from storage:', storageError);
+      }
+    } else {
+      console.warn('Could not extract file path from imageUrl:', url);
+    }
+  }
+
+  const { error: deleteError } = await supabase
     .from('designs')
     .delete()
-    .eq('id', id)
+    .eq('id', id);
 
-  if (error) throw error
-}
+  if (deleteError) throw deleteError;
+};
