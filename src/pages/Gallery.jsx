@@ -57,7 +57,7 @@ export default function Gallery() {
 
       <div className="gallery-header">
 
-        <span className="est-text">The Lbook</span>
+        <span className="est-text">The Lookbook</span>
 
         <h1>Curated Designs</h1>
 
