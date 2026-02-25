@@ -176,9 +176,6 @@ export default function Admin() {
               {actionLoading ? 'Connecting...' : (isSignUp ? 'Create Account' : 'Enter')}
             </button>
           </form>
-          <button onClick={() => setIsSignUp(!isSignUp)} className="toggle-button">
-            {isSignUp ? 'Back to Login' : 'Request Access'}
-          </button>
         </div>
       </div>
     )
