@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import supabase from '../utils/supabase'
 import { addDesign, deleteDesign, updateDesign, getDesigns } from '../utils/supabaseUtils'
 import { LogOut, Plus, Edit2, Trash2, Image as ImageIcon, X, Upload, Loader2 } from 'lucide-react'
+import imageCompression from 'browser-image-compression' // <-- new import
 import './Admin.css'
 
 export default function Admin() {
@@ -12,6 +13,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true) 
   const [actionLoading, setActionLoading] = useState(false) 
   const [error, setError] = useState('')
+  const [compressing, setCompressing] = useState(false) // <-- new state
 
   const [designs, setDesigns] = useState([])
   const [formData, setFormData] = useState({
@@ -77,10 +79,45 @@ export default function Admin() {
     }
   }
 
-  const handleFileChange = (e) => {
+  // Updated file change handler with compression
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, imageFile: file });
+    if (!file) return;
+
+    // Start compression
+    setCompressing(true);
+    setError(''); // clear previous errors
+
+    try {
+      // Compression options – tune these to your needs
+      const options = {
+        maxSizeMB: 1,            // aim for ≤1MB
+        maxWidthOrHeight: 1200,  // resize if larger than 1200px in any dimension
+        useWebWorker: true,      // offload compression to background thread
+        fileType: 'image/webp',  // optional: force WebP for better compression
+      };
+
+      // Compress the file
+      const compressedFile = await imageCompression(file, options);
+
+      // Update form data with the compressed file
+      setFormData(prev => ({
+        ...prev,
+        imageFile: compressedFile,
+      }));
+
+      // Optional: generate a local preview URL if you want to show preview
+      // const previewUrl = URL.createObjectURL(compressedFile);
+      // setPreview(previewUrl);
+    } catch (err) {
+      console.error('Compression error:', err);
+      setError('Image compression failed. Please try another image.');
+      // Clear the file selection
+      setFormData(prev => ({ ...prev, imageFile: null }));
+    } finally {
+      setCompressing(false);
+      // Clear the file input so the same file can be selected again if needed
+      e.target.value = '';
     }
   };
 
@@ -148,15 +185,15 @@ export default function Admin() {
   }
 
   return (
-  <div className="admin-dashboard">
-    {/* This button will stay fixed in the bottom right corner */}
-    <button className="logout-floating" onClick={() => supabase.auth.signOut()}>
-      <LogOut size={18} />
-      <span>Logout</span>
-    </button>
+    <div className="admin-dashboard">
+      {/* Fixed logout button */}
+      <button className="logout-floating" onClick={() => supabase.auth.signOut()}>
+        <LogOut size={18} />
+        <span>Logout</span>
+      </button>
 
-    <header className="admin-header">
-      <h1>PDSS<span>.</span> Control</h1>
+      <header className="admin-header">
+        <h1>PDSS<span>.</span> Control</h1>
       </header>
 
       <div className="admin-grid">
@@ -164,7 +201,8 @@ export default function Admin() {
         <section className="admin-card">
           <div className="card-header"><Plus size={18} /> <h2>New Collection Entry</h2></div>
           <form onSubmit={handleAddDesign} className="admin-form">
-            
+
+            {/* Drop zone with compression status */}
             <div className="drop-zone">
               <input 
                 type="file" 
@@ -172,10 +210,16 @@ export default function Admin() {
                 accept="image/*" 
                 onChange={handleFileChange} 
                 hidden
+                disabled={compressing}
               />
               <label htmlFor="file-upload" className="file-label">
-                {formData.imageFile ? (
-                  <span className="gold-text">File Ready: {formData.imageFile.name}</span>
+                {compressing ? (
+                  <>
+                    <Loader2 className="spinner" size={24} />
+                    <span>Compressing...</span>
+                  </>
+                ) : formData.imageFile ? (
+                  <span className="gold-text">Ready: {formData.imageFile.name}</span>
                 ) : (
                   <>
                     <Upload size={24} />
@@ -192,7 +236,7 @@ export default function Admin() {
               onChange={(e) => setFormData({...formData, name: e.target.value})} 
               required 
             />
-            
+
             <div className="form-row">
               <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
                 <option value="Native">Native</option>
@@ -212,8 +256,8 @@ export default function Admin() {
               onChange={(e) => setFormData({...formData, altText: e.target.value})} 
               required 
             />
-            
-            <button type="submit" disabled={actionLoading} className="gold-btn">
+
+            <button type="submit" disabled={actionLoading || compressing} className="gold-btn">
               {actionLoading ? <Loader2 className="spinner" /> : 'Publish Piece'}
             </button>
           </form>
