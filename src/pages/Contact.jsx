@@ -18,12 +18,12 @@ import {
 import './Contact.css';
 
 export default function Contact() {
-  const { selectedDesigns, clearSelection, removeFromSelection } = useSelection();
+  const { selectedDesigns, clearSelection, removeDesign, } = useSelection();
   const [view, setView] = useState('list'); 
   const [showSuccess, setShowSuccess] = useState(false);
   
   const WHATSAPP_NUMBER = "2348119224876";
-  const CONTACT_EMAIL = "psalmsynscott23@gmail.com";
+  const CONTACT_EMAIL = "pdsswears23@gmail.com";
 
   const getInquiryMessage = () => {
     return selectedDesigns.length > 0 
@@ -90,7 +90,7 @@ export default function Contact() {
             <div className="icon-box"><FaWhatsapp size={18} /></div>
             <span>WhatsApp Official</span>
           </a>
-          <a href="https://instagram.com" target="_blank" rel="noreferrer" className="s-link-premium">
+          <a href="https://www.instagram.com/23pdss?igsh=ZXo5eHY2bGpkbmZy" target="_blank" rel="noreferrer" className="s-link-premium">
             <div className="icon-box"><FaInstagram size={18} /></div>
             <span>Instagram Direct</span>
           </a>
@@ -140,7 +140,7 @@ export default function Contact() {
                         </div>
                       </div>
                       <button 
-                        onClick={() => removeFromSelection(design.id)}
+                        onClick={()   => removeDesign (design.id)}
                         className="remove-btn"
                       >
                         <Trash2 size={18} />
