@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { useSelection } from '../contexts/SelectionContext';
 import { 
-  MessageCircle, 
-  Instagram, 
-  Mail, 
   Trash2, 
   ArrowRight, 
-  Music2, 
-  MapPin, 
   CheckCircle2, 
   X, 
   Send, 
   ArrowLeft 
 } from 'lucide-react';
+import { 
+  FaWhatsapp, 
+  FaInstagram, 
+  FaTiktok, 
+  FaEnvelope, 
+  FaMapMarkerAlt 
+} from 'react-icons/fa';
 import './Contact.css';
 
 export default function Contact() {
@@ -85,25 +87,25 @@ export default function Contact() {
         <div className="social-stack">
           <p className="stack-label">Direct Channels</p>
           <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer" className="s-link-premium">
-            <div className="icon-box"><MessageCircle size={18} /></div>
+            <div className="icon-box"><FaWhatsapp size={18} /></div>
             <span>WhatsApp Official</span>
           </a>
           <a href="https://instagram.com" target="_blank" rel="noreferrer" className="s-link-premium">
-            <div className="icon-box"><Instagram size={18} /></div>
+            <div className="icon-box"><FaInstagram size={18} /></div>
             <span>Instagram Direct</span>
           </a>
           <a href="https://www.tiktok.com/@pdsswear?_r=1&_t=ZS-94A8cIjdn1w" target="_blank" rel="noreferrer" className="s-link-premium">
-            <div className="icon-box"><Music2 size={18} /></div>
+            <div className="icon-box"><FaTiktok size={18} /></div>
             <span>TikTok Studio</span>
           </a>
           <button onClick={() => setView('email')} className="s-link-premium" style={{background: 'none', border: 'none', width: '100%', cursor: 'pointer'}}>
-            <div className="icon-box"><Mail size={18} /></div>
+            <div className="icon-box"><FaEnvelope size={18} /></div>
             <span>Email Inquiry</span>
           </button>
         </div>
 
         <div className="location-footer">
-          <MapPin size={14} />
+          <FaMapMarkerAlt size={14} />
           <span>Lagos, Nigeria | Worldwide Shipping</span>
         </div>
       </aside>
@@ -160,10 +162,10 @@ export default function Contact() {
                   <button className="clear-all" onClick={clearSelection}>Reset All</button>
                   <div style={{display: 'flex', gap: '1rem'}}>
                     <button className="mode-switch-btn" onClick={() => setView('email')}>
-                      <Mail size={18} /> Email
+                      <FaEnvelope size={18} /> Email
                     </button>
                     <button className="checkout-btn" onClick={handleWhatsAppClick}>
-                      WhatsApp <MessageCircle size={20} />
+                      WhatsApp <FaWhatsapp size={20} />
                     </button>
                   </div>
                 </footer>
